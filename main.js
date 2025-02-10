@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js'
 
-import { 
+import {
   getFirestore,
   collection,
   doc,
@@ -28,12 +28,12 @@ const firebaseConfig = {
 const aplikasi = initializeApp(firebaseConfig)
 const basisdata = getFirestore(aplikasi)
 
- // fungsi ambil daftar barang
+// fungsi ambil daftar barang
 export async function ambilDaftarInventory() {
   const refDokumen = collection(basisdata, "inventory");
   const kueri = query(refDokumen, orderBy("item"));
   const cuplikanKueri = await getDocs(kueri);
-  
+
   let hasilKueri = [];
   cuplikanKueri.forEach((dokumen) => {
     hasilKueri.push({
@@ -41,24 +41,25 @@ export async function ambilDaftarInventory() {
       item: dokumen.data().item,
       jumlah: dokumen.data().jumlah,
       harga: dokumen.data().harga
-      
+
     })
   })
-  
+
   return hasilKueri;
 }
 
 // menambah barang ke keranjang
 export async function tambahbarangkekeranjang(
   idbarang,
+  nama,
   harga,
   jumlah,
   idpelanggan,
   namapelanggan
-  ) {
-    
+) {
 
- try {
+
+  try {
     // menyimpan data ke collection transaksi
     const refDokumen = await addDoc(collection(basisdata, "transaksi"), {
       idbarang: idbarang,
@@ -68,14 +69,14 @@ export async function tambahbarangkekeranjang(
       idpelanggan: idpelanggan,
       namapelanggan: namapelanggan
     })
-    
+
     // menampilkan pesan berhasil
     console.log("berhasil menyimpan keranjang")
   } catch (error) {
     // menampilkan pesan gagal
-    console.log(error)    
+    console.log(error)
   }
-} 
+}
 
 
 // menampilkan barang di keranjang
